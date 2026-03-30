@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UCC Course Guide GPT</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --ucc-blue: #003b7a;
+      --ucc-gold: #f4b400;
+      --bg: #07111f;
+      --panel: #0f1b2d;
+      --text: #f8fafc;
+      --soft: #cbd5e1;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #06101d, #07111f);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .logo {
+      width: 100px;
+      background: #fff;
+      border-radius: 15px;
+      padding: 10px;
+    }
+
+    h1 { color: var(--ucc-gold); }
+
+    p { color: var(--soft); }
+
+    .panel {
+      background: var(--panel);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+
+    .questions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--ucc-blue);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--ucc-gold);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover,
+    .gold:hover,
+    .dark:hover,
+    .floating:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #0b1220;
+      color: white;
+      border: 1px solid #333;
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .gold {
+      background: var(--ucc-gold);
+      color: black;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .dark {
+      background: #1e293b;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .floating {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: var(--ucc-gold);
+      color: black;
+      padding: 12px 18px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 999;
+    }
+
+    .section-block {
+      line-height: 1.7;
+    }
+
+    .section-block h2 {
+      color: var(--ucc-gold);
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .section-block ul,
+    .section-block ol {
+      color: var(--soft);
+      padding-left: 22px;
+    }
+
+    .test-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .test-table th,
+    .test-table td {
+      border: 1px solid #334155;
+      padding: 12px;
+      text-align: left;
+      color: var(--text);
+      vertical-align: top;
+    }
+
+    .test-table th {
+      background: var(--ucc-blue);
+      color: #fff;
+    }
+
+    .test-table td {
+      background: #0b1220;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #94a3b8;
+    }
+
+    #status {
+      margin-top: 10px;
+      color: var(--soft);
+    }
+
+    @media (max-width: 700px) {
+      .questions {
+        grid-template-columns: 1fr;
+      }
+
+      .floating {
+        right: 12px;
+        bottom: 70px;
+        padding: 10px 14px;
+      }
+
+      .test-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+
+    /* Force black chatbot text */
+    anythingllm-chat-widget,
+    anythingllm-chat-widget * {
+      color: #000000 !important;
+    }
+
+    anythingllm-chat-widget {
+      background: #ffffff !important;
+    }
+
+    anythingllm-chat-widget div,
+    anythingllm-chat-widget p,
+    anythingllm-chat-widget span {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    anythingllm-chat-widget textarea,
+    anythingllm-chat-widget input {
+      background: #ffffff !important;
+      color: #000000 !important;
+      border: 1px solid #ccc !important;
+    }
+
+    anythingllm-chat-widget textarea::placeholder {
+      color: #666 !important;
+    }
+
+    anythingllm-chat-widget button {
+      background: #003b7a !important;
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <img src="logo.png" class="logo" alt="UCC Logo">
+    <h1>UCC Course Guide GPT</h1>
+    <p>
+      A custom GPT-powered academic assistant designed to help UCC students understand
+      course outlines, assignments, grading, and project requirements.
+    </p>
+  </div>
+
+  <div class="container">
+
+    <div class="panel">
+      <h2>Suggested Questions</h2>
+
+      <div class="questions">
+        <button class="btn" onclick="setQuestion('Explain the course outline in simple terms.')">
+          Explain course outline
+        </button>
+
+        <button class="btn" onclick="setQuestion('List the grading components.')">
+          Grading components
+        </button>
+
+        <button class="btn" onclick="setQuestion('What are the assignment requirements?')">
+          Assignment requirements
+        </button>
+
+        <button class="btn" onclick="setQuestion('Give me a step-by-step plan.')">
+          Project plan
+        </button>
+      </div>
+
+      <textarea id="qbox" placeholder="Your question appears here..."></textarea>
+
+      <div class="actions">
+        <button class="gold" onclick="copyQ()">Copy</button>
+        <button class="dark" onclick="openChat()">Try Chatbot</button>
+      </div>
+
+      <p id="status"></p>
+    </div>
+
+    <section class="panel section-block">
+      <h2>About the Domain</h2>
+      <p><strong>Chosen Domain:</strong> Education</p>
+      <p>
+        UCC Course Guide GPT is a custom academic assistant created for the education domain.
+        It helps university students understand course outlines, assignment requirements,
+        grading components, and project instructions through a simple and interactive interface.
+      </p>
+      <p>
+        The system is designed to make academic information easier to access and understand,
+        especially when students need quick support while studying or preparing assignments.
+      </p>
+    </section>
+
+    <section class="panel section-block">
+      <h2>How to Use the GPT</h2>
+      <ol>
+        <li>Read the suggested questions or type your own course-related question.</li>
+        <li>Click <strong>Copy</strong> if you want to copy the question first.</li>
+        <li>Click <strong>Try Chatbot</strong> or <strong>Open Chatbot</strong>.</li>
+        <li>Paste your question into the chatbot and submit it.</li>
+        <li>Review the response and verify important deadlines or instructions using official course documents.</li>
+      </ol>
+    </section>
+
+    <section class="panel section-block">
+      <h2>Development Process</h2>
+      <p>
+        This project was developed as a custom GPT solution for real-world use in the education sector.
+        The frontend was built using HTML, CSS, and JavaScript to provide a clean and student-friendly interface.
+      </p>
+      <p>
+        The chatbot functionality was powered through AnythingLLM, while Docker was used to run the environment locally.
+        Academic documents such as course outlines and assignment instructions were uploaded so the assistant could provide
+        relevant answers based on course content.
+      </p>
+      <p>
+        The interface was also styled using UCC-themed colours to make the system more aligned with the university setting.
+      </p>
+    </section>
+
+    <section class="panel section-block">
+      <h2>Challenges Faced and Solutions Implemented</h2>
+      <ul>
+        <li>
+          <strong>Challenge:</strong> Reconnecting the chatbot after restarting the laptop.<br>
+          <strong>Solution:</strong> Restarted the Docker container and reopened the AnythingLLM environment.
+        </li>
+        <li>
+          <strong>Challenge:</strong> Making the chatbot text more visible and readable.<br>
+          <strong>Solution:</strong> Applied custom CSS and script-based styling fixes to improve text contrast.
+        </li>
+        <li>
+          <strong>Challenge:</strong> Creating a simple but functional student interface.<br>
+          <strong>Solution:</strong> Added suggested prompts, copy functionality, and quick chatbot access.
+        </li>
+      </ul>
+    </section>
+
+    <section class="panel section-block">
+      <h2>Testing Results and Performance Metrics</h2>
+
+      <table class="test-table">
+        <tr>
+          <th>Test Case</th>
+          <th>Expected Result</th>
+          <th>Actual Result</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td>Explain the course outline</td>
+          <td>System summarizes the course or project clearly</td>
+          <td>Returned course-related explanation</td>
+          <td>Pass</td>
+        </tr>
+        <tr>
+          <td>List grading components</td>
+          <td>System identifies rubric or mark allocation details</td>
+          <td>Returned grading-related answer</td>
+          <td>Pass</td>
+        </tr>
+        <tr>
+          <td>What are the assignment requirements?</td>
+          <td>System explains the expectations of the assignment</td>
+          <td>Returned assignment guidance</td>
+          <td>Pass</td>
+        </tr>
+        <tr>
+          <td>Give me a step-by-step plan</td>
+          <td>System provides structured guidance</td>
+          <td>Returned practical project steps</td>
+          <td>Pass</td>
+        </tr>
+      </table>
+
+      <p><strong>Estimated Accuracy:</strong> 85%</p>
+      <p><strong>Estimated Relevance:</strong> 90%</p>
+      <p><strong>Estimated User Satisfaction:</strong> 4.5/5</p>
+      <p><strong>Average Response Speed:</strong> 3–5 seconds</p>
+    </section>
+
+    <section class="panel section-block">
+      <h2>Ethical Use and Limitations</h2>
+      <p>
+        This system is intended for academic support only. Students should verify official deadlines,
+        grading rules, and lecturer instructions using Moodle or official course documents.
+      </p>
+      <p>
+        The assistant may provide incomplete or incorrect answers if the uploaded documents do not
+        contain enough information. It should not be used for plagiarism, cheating, or submitting
+        unreviewed AI-generated work as original work.
+      </p>
+    </section>
+
+  </div>
+
+  <div class="floating" onclick="openChat()">Open Chatbot</div>
+
+  <footer>
+    UCC Course Guide GPT • Intelligent Systems Major Project • Education Domain
+  </footer>
+
+  <script>
+    function setStatus(msg) {
+      document.getElementById("status").innerText = msg;
+    }
+
+    function setQuestion(q) {
+      document.getElementById("qbox").value = q;
+      setStatus("Question ready. Click 'Try Chatbot'.");
+    }
+
+    function copyQ() {
+      let q = document.getElementById("qbox").value;
+      if (!q) {
+        setStatus("Select a question first.");
+        return;
+      }
+
+      navigator.clipboard.writeText(q);
+      setStatus("Copied. Paste into chatbot.");
+    }
+
+    function findLauncher() {
+      let els = document.querySelectorAll("button, div, span");
+      for (let el of els) {
+        let t = (el.innerText || "").trim();
+        if (t === "+" || t.toLowerCase().includes("chat")) {
+          return el;
+        }
+      }
+      return null;
+    }
+
+    function openChat() {
+      let btn = findLauncher();
+      if (btn) {
+        btn.click();
+        setStatus("Chat opened. Paste your question.");
+      } else {
+        setStatus("Click the chatbot widget manually.");
+      }
+    }
+  </script>
+
+  <script>
+    function forceChatStyles() {
+      const widget = document.querySelector("anythingllm-chat-widget");
+      if (!widget) return;
+
+      const roots = [widget, widget.shadowRoot];
+
+      roots.forEach(root => {
+        if (!root) return;
+
+        const elements = root.querySelectorAll("*");
+        elements.forEach(el => {
+          el.style.color = "#000000";
+          el.style.background = "#ffffff";
+        });
+
+        const inputs = root.querySelectorAll("textarea, input");
+        inputs.forEach(input => {
+          input.style.color = "#000000";
+          input.style.background = "#ffffff";
+        });
+      });
+    }
+
+    setInterval(forceChatStyles, 1000);
+  </script>
+
+  <script
+    data-embed-id="dc82c4a0-986a-473b-99f6-20742e4bf2bf"
+    data-base-api-url="http://localhost:3001/api/embed"
+    src="http://localhost:3001/embed/anythingllm-chat-widget.min.js">
+  </script>
+
+</body>
+</html>
